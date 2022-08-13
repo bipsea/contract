@@ -1,1 +1,1 @@
-# Bipsea solidity contracts
+# Bipsea solidity contract
