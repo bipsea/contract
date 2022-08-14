@@ -6,7 +6,7 @@ contract Bipsea {
     struct Item {
         address seller;     // Address of content creator. Gets 99% of sale
         address investor;   // Address of user paying for tx fees. Gets 1% of sale
-        string  uri;        // Metadata uri: https://ipfs.io/ipfs/bafkreig5x4jgaybzl2vaqxctneclovifahb5znqamffw6twcisy4kvmbpm
+        string  uri;        // Metadata uri: https://ipfs.io/ipfs/bafkreigjdoplg6qattgtkx7zrfreky3xjk52dpxeqxf7bqx7funa2z6vpu
         uint256 price;      // Price of item in smallest unit (wei)
         bool    canBuy;     // content creator can delist item
     }
