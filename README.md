@@ -1,4 +1,4 @@
-# Bipsea solidity contract
+# Contract
 
 Solidity contract
 
