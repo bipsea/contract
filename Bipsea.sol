@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.16;
 
 contract Bipsea {
     // Owner address can delist inappropriate items. Will delegate to DAO
@@ -98,5 +98,10 @@ contract Bipsea {
         emit Delist(_itemId, msg.sender);
     }
 
+    // Set Owner
+    function setOwner(address _newOwner) public {
+        require(msg.sender == owner, "Only owner set");
+        owner = _newOwner;
+    }
 
 }
