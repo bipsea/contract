@@ -2,13 +2,15 @@
 pragma solidity ^0.8.0;
 
 contract Bipsea {
+    // Owner address can delist inappropriate items. Will delegate to DAO
+    address public owner;
+
     // Item to sell
     struct Item {
         address seller;     // Address of content creator. Gets 99% of sale
         address investor;   // Address of user paying for tx fees. Gets 1% of sale
         string  uri;        // Metadata uri: https://ipfs.io/ipfs/bafkreigjdoplg6qattgtkx7zrfreky3xjk52dpxeqxf7bqx7funa2z6vpu
         uint256 price;      // Price of item in smallest unit (wei)
-        bool    canBuy;     // content creator can delist item
     }
 
     // Stores all items: itemId => Item
@@ -25,7 +27,11 @@ contract Bipsea {
     event Buy(uint256 indexed _itemId, address indexed _buyer, uint256 _amount);
     event Withdraw(address indexed _sellerAddress, uint256 _sellerAmount, address _withdrawerAddress, uint256 _withdrawerAmount);
     event Delist(uint64 indexed _itemId, address indexed _seller);
-    event Relist(uint64 indexed _itemId, address indexed _seller);
+
+    // Constructor
+    constructor() {
+        owner == msg.sender;
+    }
 
     // Sell item
     function sell(
@@ -42,8 +48,7 @@ contract Bipsea {
             seller: _seller,
             investor: _investor,
             uri: _uri,
-            price: _price,
-            canBuy: true
+            price: _price
         });
         // emit Sell event
         emit Sell(_itemId);
@@ -51,7 +56,6 @@ contract Bipsea {
 
     // Buy item
     function buy(uint64 _itemId) public payable {
-        require(items[_itemId].canBuy, "Item not for sale");
         require(msg.value >= items[_itemId].price, "Insufficient Funds");
         require(purchase[_itemId][msg.sender] == false, "Already Purchased");
         // Set purchase to true
@@ -89,18 +93,10 @@ contract Bipsea {
 
     // Delist Item
     function delist(uint64 _itemId) public {
-        require(items[_itemId].seller == msg.sender, "Only seller can delist");
-        require(items[_itemId].canBuy, "Already delisted");
-        items[_itemId].canBuy = false;
+        require(msg.sender == items[_itemId].seller || msg.sender == owner, "Only seller || owner can delist");
+        delete items[_itemId];
         emit Delist(_itemId, msg.sender);
     }
 
-    // Relist Item
-    function relist(uint64 _itemId) public {
-        require(items[_itemId].seller == msg.sender, "Only seller can delist");
-        require(items[_itemId].canBuy == false, "Already listed");
-        items[_itemId].canBuy = true;
-        emit Relist(_itemId, msg.sender);
-    }
 
 }
