@@ -24,7 +24,7 @@ contract Bipsea {
     event Sell(uint256 _itemId);
     event Buy(uint256 indexed _itemId, address indexed _buyer, uint256 _amount);
     event Delist(uint256 indexed _itemId, address indexed _seller);
-    event Revenue(address indexed _address, uint256 _amount);
+    event Revenue(uint256 indexed _itemId, address indexed _address, uint256 _amount);
 
     // Constructor
     constructor() {
@@ -70,8 +70,8 @@ contract Bipsea {
         // Emit Buy
         emit Buy(_itemId, msg.sender, msg.value);
         // Emit Revenue
-        emit Revenue(items[_itemId].seller, sellerValue);
-        emit Revenue(items[_itemId].investor, investorValue);
+        emit Revenue(_itemId, items[_itemId].seller, sellerValue);
+        emit Revenue(_itemId, items[_itemId].investor, investorValue);
     }
 
     // Delist Item
